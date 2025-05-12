@@ -175,7 +175,8 @@ public class Register extends javax.swing.JFrame {
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
             btnRegister.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            new Register().setVisible(true);
+                 JOptionPane.showMessageDialog(null, "Daftar berhasil,silahkan login");
+            new Login().setVisible(true);
             dispose(); // Tutup form login
     }
 });
@@ -183,22 +184,23 @@ public class Register extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegisterActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-            btnLogin.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            String user = txtUsername.getText();
-            String pass = new String(txtPassword.getPassword());
-
-        // Contoh validasi sederhana (nanti bisa kamu hubungkan ke database)
-        if(user.equals("admin") && pass.equals("1234")) {
-            JOptionPane.showMessageDialog(null, "Login Berhasil!");
-            // Buka halaman utama
-            new mainkepegawaian().setVisible(true);
-            dispose(); // Tutup form login
-        } else {
-            JOptionPane.showMessageDialog(null, "Username atau Password salah!");
-        }
-    }
-});
+//            btnLogin.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//            String user = txtUsername.getText();
+//            String pass = new String(txtPassword.getPassword());
+//
+//        // Contoh validasi sederhana (nanti bisa kamu hubungkan ke database)
+//        if(user.equals("admin") && pass.equals("1234")) {
+//            JOptionPane.showMessageDialog(null, "Login Berhasil!");
+//            // Buka halaman utama
+           new Register().setVisible(false);
+           new Login().setVisible(true);
+//            dispose(); // Tutup form login
+//        } else {
+          //  JOptionPane.showMessageDialog(null, "Username atau Password salah!");
+       // }
+    //}
+//});
 
     }//GEN-LAST:event_btnLoginActionPerformed
 
