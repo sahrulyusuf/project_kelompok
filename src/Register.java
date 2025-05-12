@@ -2,6 +2,8 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -175,33 +177,57 @@ public class Register extends javax.swing.JFrame {
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
             btnRegister.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                 JOptionPane.showMessageDialog(null, "Daftar berhasil,silahkan login");
-            new Login().setVisible(true);
-            dispose(); // Tutup form login
+            
+             String email = txtEmail.getText();
+               String name = txtName.getText();
+         String username = txtUsername.getText();
+            String password = new String(txtPassword.getPassword());
+
+       
+        if (email.isEmpty() || name.isEmpty() || username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Semua kolom harus diisi!");
+            return;
+        }
+        
+        try {
+            // Gantilah URL, username, dan password sesuai dengan konfigurasi database kamu
+            Connection con = Koneksi.getConnection();
+
+            String sql = "INSERT INTO pengguna (email, nama, username, password) VALUES (?, ?, ?, ?)";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, email);
+            stmt.setString(2, name);
+            stmt.setString(3, username);
+            stmt.setString(4, password);
+
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, "Pendaftaran berhasil!,silahkan login");
+                new Login().setVisible(true); 
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(null, "Pendaftaran gagal, coba lagi!");
+            }
+
+            con.close();
+   
+           
+        } catch (Exception err) {
+            err.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Terjadi kesalahan: " + err.getMessage());
+        }
+             
+           
     }
 });
 
     }//GEN-LAST:event_btnRegisterActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-//            btnLogin.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//            String user = txtUsername.getText();
-//            String pass = new String(txtPassword.getPassword());
-//
-//        // Contoh validasi sederhana (nanti bisa kamu hubungkan ke database)
-//        if(user.equals("admin") && pass.equals("1234")) {
-//            JOptionPane.showMessageDialog(null, "Login Berhasil!");
-//            // Buka halaman utama
+
            new Register().setVisible(false);
            new Login().setVisible(true);
-//            dispose(); // Tutup form login
-//        } else {
-          //  JOptionPane.showMessageDialog(null, "Username atau Password salah!");
-       // }
-    //}
-//});
-
+           dispose(); // Tutup form login
     }//GEN-LAST:event_btnLoginActionPerformed
 
     /**

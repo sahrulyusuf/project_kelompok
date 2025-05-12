@@ -4,7 +4,9 @@
  */
 import javax.swing.*;
 import java.awt.event.*;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 /**
  *
  * @author yusuf
@@ -141,32 +143,42 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPasswordActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        btnLogin.addActionListener(new ActionListener() {
-    public void actionPerformed(ActionEvent e) {
-        String user = txtUsername.getText();
-        String pass = new String(txtPassword.getPassword());
+     
+                String user = txtUsername.getText();
+                String pass = new String(txtPassword.getPassword());
 
-        // Contoh validasi sederhana (nanti bisa kamu hubungkan ke database)
-        if(user.equals("admin") && pass.equals("1234")) {
-            JOptionPane.showMessageDialog(null, "Login Berhasil!");
-            // Buka halaman utama
-            new mainkepegawaian().setVisible(true);
-            dispose(); // Tutup form login
-        } else {
-            JOptionPane.showMessageDialog(null, "Username atau Password salah!");
-        }
-    }
-});
+                    try {
+                        
+                         Connection conn = Koneksi.getConnection();
+                        String sql = "SELECT * FROM pengguna WHERE username = ? AND password = ?";
+                        PreparedStatement stmt = conn.prepareStatement(sql);
+                        stmt.setString(1, user); 
+                        stmt.setString(2, pass); 
 
+                        ResultSet rs = stmt.executeQuery();
+
+                        if (rs.next()) {
+                            JOptionPane.showMessageDialog(null, "Login Berhasil!");
+                            new mainkepegawaian().setVisible(true);
+                            dispose(); 
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Username atau Password salah!");
+                        }
+
+                        rs.close();
+                        stmt.close();
+                        conn.close();
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "Terjadi kesalahan: " + ex.getMessage());
+                    }
+          
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
-        btnRegister.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+       
             new Register().setVisible(true);
             dispose(); // Tutup form login
-    }
-});
+
 
     }//GEN-LAST:event_btnRegisterActionPerformed
 

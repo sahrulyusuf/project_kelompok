@@ -1,7 +1,11 @@
 // Tambahkan di atas class
 import javax.swing.table.DefaultTableModel;
 import java.util.Vector;
-
+import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.ResultSet;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -14,10 +18,14 @@ import java.util.Vector;
 public class mainkepegawaian extends javax.swing.JFrame {
     
     DefaultTableModel model;
-    ModelKaryawan mk;
+   
 
 private void formWindowOpened(java.awt.event.WindowEvent evt) {
     // Inisialisasi model untuk JTable saat form dibuka
+  
+}
+
+private void tampilDataKaryawan() {
     model = new DefaultTableModel();
     model.addColumn("NIK");
     model.addColumn("Nama");
@@ -26,15 +34,37 @@ private void formWindowOpened(java.awt.event.WindowEvent evt) {
     model.addColumn("Alamat");
     model.addColumn("No Telepon");
     model.addColumn("Email");
-    tblKaryawan.setModel(model);
+
+    try {
+        Connection conn = Koneksi.getConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM karyawan");
+
+        while (rs.next()) {
+            model.addRow(new Object[] {
+                rs.getString("nik"),
+                rs.getString("nama"),
+                rs.getString("tempat_tanggal_lahir"),
+                rs.getString("jenis_kelamin"),
+                rs.getString("alamat"),
+                rs.getString("telepon"),
+                rs.getString("email")
+            });
+        }
+
+        tblKaryawan.setModel(model);
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Gagal menampilkan data: " + e.getMessage());
+    }
 }
+
 
     /**
      * Creates new form mainkepegawaian
      */
     public mainkepegawaian() {
         initComponents();
-      this.mk = new ModelKaryawan();
+     tampilDataKaryawan();
     
     }
 
@@ -254,6 +284,11 @@ private void formWindowOpened(java.awt.event.WindowEvent evt) {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblKaryawan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblKaryawanMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblKaryawan);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -299,7 +334,34 @@ private void formWindowOpened(java.awt.event.WindowEvent evt) {
     }//GEN-LAST:event_txtNikActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-      
+     String nik = txtNik.getText();
+    String nama = txtNama.getText();
+    String tempatTanggalLahir = txtTempatTanggalLahir.getText();
+    String jk = rbLaki.isSelected() ? "Laki-laki" : "Perempuan";
+    String alamat = txtAlamat.getText();
+    String telepon = txtTelepon.getText();
+    String email = txtEmail.getText();
+
+    try {
+        Connection conn = Koneksi.getConnection();
+        String sql = "UPDATE karyawan SET nama=?, tempat_tanggal_lahir=?, jenis_kelamin=?, alamat=?, telepon=?, email=? WHERE nik=?";
+        PreparedStatement pst = conn.prepareStatement(sql);
+        pst.setString(1, nama);
+        pst.setString(2, tempatTanggalLahir);
+        pst.setString(3, jk);
+        pst.setString(4, alamat);
+        pst.setString(5, telepon);
+        pst.setString(6, email);
+        pst.setString(7, nik);
+
+        pst.executeUpdate();
+         tampilDataKaryawan();
+        JOptionPane.showMessageDialog(this, "Sip, gees di update.");
+
+        clearForm();
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Mantap: " + e.getMessage());
+    }
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void rbLakiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbLakiActionPerformed
@@ -312,12 +374,38 @@ private void formWindowOpened(java.awt.event.WindowEvent evt) {
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
     String nik = txtNik.getText();
     String nama = txtNama.getText();
-    String TanggalLahir = txtTempatTanggalLahir.getText();
+    String ttl = txtTempatTanggalLahir.getText();
     String jk = rbLaki.isSelected() ? "Laki-laki" : "Perempuan";
     String alamat = txtAlamat.getText();
     String telepon = txtTelepon.getText();
     String email = txtEmail.getText();
-    this.mk.simpan(nik, nama,TanggalLahir, jk, alamat, telepon, email);
+    
+     try {
+        Connection conn = Koneksi.getConnection(); 
+        String sql = "INSERT INTO karyawan (nik, nama, tempat_tanggal_lahir, jenis_kelamin, alamat, telepon, email) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, nik);
+        pstmt.setString(2, nama);
+        pstmt.setString(3, ttl);
+        pstmt.setString(4, jk);
+        pstmt.setString(5, alamat);
+        pstmt.setString(6, telepon);
+        pstmt.setString(7, email);
+
+        int hasil = pstmt.executeUpdate();
+        if (hasil > 0) {
+            tampilDataKaryawan();
+            JOptionPane.showMessageDialog(this, "Data berhasil disimpan!");
+            clearForm();
+        } else {
+            JOptionPane.showMessageDialog(this, "Data gagal disimpan.");
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Terjadi kesalahan: " + e.getMessage());
+        e.printStackTrace();
+    } 
+   
     //model.addRow(new Object[]{nik, nama, ttl, jk, alamat, telepon, email});
     clearForm();
 
@@ -336,10 +424,58 @@ private void formWindowOpened(java.awt.event.WindowEvent evt) {
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
         int row = tblKaryawan.getSelectedRow();
-        if (row >= 0) {
-        clearForm();
+
+    if (row == -1) {
+        JOptionPane.showMessageDialog(this, "Pilih baris yang ingin dihapus!");
+        return;
+    }
+
+    String nik = model.getValueAt(row, 0).toString();
+
+    int konfirmasi = JOptionPane.showConfirmDialog(this, 
+        "Yakin ga lu mau hapus: " + nik + "?", 
+        "Yakin dong", JOptionPane.YES_NO_OPTION);
+
+    if (konfirmasi == JOptionPane.YES_OPTION) {
+        try {
+            Connection conn = Koneksi.getConnection();
+            String sql = "DELETE FROM karyawan WHERE nik=?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, nik);
+            pst.executeUpdate();
+  tampilDataKaryawan();
+            JOptionPane.showMessageDialog(this, "Sip, ges dihapus.");
+          
+            clearForm();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "gagal bor: " + e.getMessage());
         }
+    }
+        
+       
     }//GEN-LAST:event_btnHapusActionPerformed
+
+    private void tblKaryawanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblKaryawanMouseClicked
+        int baris = tblKaryawan.getSelectedRow();
+    
+    if (baris != -1) {
+        txtNik.setText(model.getValueAt(baris, 0).toString());
+        txtNama.setText(model.getValueAt(baris, 1).toString());
+        txtTempatTanggalLahir.setText(model.getValueAt(baris, 2).toString());
+        String jk = model.getValueAt(baris, 3).toString();
+        if (jk.equals("Laki-laki")) {
+            rbLaki.setSelected(true);
+        } else {
+            rbPerempuan.setSelected(true);
+        }
+        txtAlamat.setText(model.getValueAt(baris, 4).toString());
+        txtTelepon.setText(model.getValueAt(baris, 5).toString());
+        txtEmail.setText(model.getValueAt(baris, 6).toString());
+    }
+    }//GEN-LAST:event_tblKaryawanMouseClicked
+
+    
+        
 
     /**
      * @param args the command line arguments
