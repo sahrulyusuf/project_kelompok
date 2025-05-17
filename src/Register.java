@@ -37,7 +37,7 @@ public class Register extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         txtEmail = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        txtName = new javax.swing.JTextField();
+        txtNama = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         txtUsername = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -49,7 +49,7 @@ public class Register extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(255, 0, 0));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         jLabel1.setText("Register Kepegawaian");
@@ -114,7 +114,7 @@ public class Register extends javax.swing.JFrame {
                         .addComponent(jLabel5)
                         .addComponent(txtUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
                         .addComponent(jLabel4)
-                        .addComponent(txtName, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
+                        .addComponent(txtNama, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
                         .addComponent(jLabel3)
                         .addComponent(txtEmail)
                         .addComponent(jLabel2)
@@ -134,7 +134,7 @@ public class Register extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -179,12 +179,12 @@ public class Register extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
             
              String email = txtEmail.getText();
-               String name = txtName.getText();
+               String nama = txtNama.getText();
          String username = txtUsername.getText();
             String password = new String(txtPassword.getPassword());
 
        
-        if (email.isEmpty() || name.isEmpty() || username.isEmpty() || password.isEmpty()) {
+        if (email.isEmpty() || nama.isEmpty() || username.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Semua kolom harus diisi!");
             return;
         }
@@ -193,12 +193,11 @@ public class Register extends javax.swing.JFrame {
             // Gantilah URL, username, dan password sesuai dengan konfigurasi database kamu
             Connection con = Koneksi.getConnection();
 
-            String sql = "INSERT INTO pengguna (email, nama, username, password) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO pengguna (username, password) VALUES (?, ?)";
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1, email);
-            stmt.setString(2, name);
-            stmt.setString(3, username);
-            stmt.setString(4, password);
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+                        
 
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -277,7 +276,7 @@ public class Register extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField txtEmail;
-    private javax.swing.JTextField txtName;
+    private javax.swing.JTextField txtNama;
     private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables

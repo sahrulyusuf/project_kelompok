@@ -32,13 +32,13 @@ private void tampilDataKaryawan() {
     model.addColumn("TempatTanggalLahir");
     model.addColumn("Jenis Kelamin");
     model.addColumn("Alamat");
-    model.addColumn("No Telepon");
+    model.addColumn("NoTelepon");
     model.addColumn("Email");
 
     try {
         Connection conn = Koneksi.getConnection();
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM karyawan");
+        ResultSet rs = stmt.executeQuery("SELECT * FROM Karyawan");
 
         while (rs.next()) {
             model.addRow(new Object[] {
@@ -47,7 +47,7 @@ private void tampilDataKaryawan() {
                 rs.getString("tempat_tanggal_lahir"),
                 rs.getString("jenis_kelamin"),
                 rs.getString("alamat"),
-                rs.getString("telepon"),
+                rs.getString("no_telepon"),
                 rs.getString("email")
             });
         }
@@ -100,7 +100,6 @@ private void tampilDataKaryawan() {
         btnSimpan = new javax.swing.JButton();
         btnHapus = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblKaryawan = new javax.swing.JTable();
@@ -119,6 +118,8 @@ private void tampilDataKaryawan() {
         jScrollPane1.setViewportView(jTable1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 0));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("Data Karyawan");
@@ -152,7 +153,7 @@ private void tampilDataKaryawan() {
 
         jLabel8.setText("Email");
 
-        btnSimpan.setBackground(new java.awt.Color(0, 255, 102));
+        btnSimpan.setBackground(new java.awt.Color(0, 153, 0));
         btnSimpan.setForeground(new java.awt.Color(255, 255, 255));
         btnSimpan.setText("Simpan");
         btnSimpan.addActionListener(new java.awt.event.ActionListener() {
@@ -267,12 +268,11 @@ private void tampilDataKaryawan() {
                     .addComponent(btnEdit)))
         );
 
-        jButton3.setText("Hapus");
-
         jLabel9.setBackground(new java.awt.Color(255, 255, 255));
         jLabel9.setForeground(new java.awt.Color(255, 51, 51));
         jLabel9.setText("Tambah Data Karyawan");
 
+        tblKaryawan.setBackground(new java.awt.Color(255, 255, 0));
         tblKaryawan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -304,11 +304,6 @@ private void tampilDataKaryawan() {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(293, 293, 293)
-                    .addComponent(jButton3)
-                    .addContainerGap(313, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -319,11 +314,6 @@ private void tampilDataKaryawan() {
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(191, 191, 191)
-                    .addComponent(jButton3)
-                    .addContainerGap(757, Short.MAX_VALUE)))
         );
 
         pack();
@@ -339,18 +329,18 @@ private void tampilDataKaryawan() {
     String tempatTanggalLahir = txtTempatTanggalLahir.getText();
     String jk = rbLaki.isSelected() ? "Laki-laki" : "Perempuan";
     String alamat = txtAlamat.getText();
-    String telepon = txtTelepon.getText();
+    String no_telepon = txtTelepon.getText();
     String email = txtEmail.getText();
 
     try {
         Connection conn = Koneksi.getConnection();
-        String sql = "UPDATE karyawan SET nama=?, tempat_tanggal_lahir=?, jenis_kelamin=?, alamat=?, telepon=?, email=? WHERE nik=?";
+        String sql = "UPDATE karyawan SET nama=?, tempat_tanggal_lahir=?, jenis_kelamin=?, alamat=?, no_telepon=?, email=? WHERE nik=?";
         PreparedStatement pst = conn.prepareStatement(sql);
         pst.setString(1, nama);
         pst.setString(2, tempatTanggalLahir);
         pst.setString(3, jk);
         pst.setString(4, alamat);
-        pst.setString(5, telepon);
+        pst.setString(5, no_telepon);
         pst.setString(6, email);
         pst.setString(7, nik);
 
@@ -382,7 +372,7 @@ private void tampilDataKaryawan() {
     
      try {
         Connection conn = Koneksi.getConnection(); 
-        String sql = "INSERT INTO karyawan (nik, nama, tempat_tanggal_lahir, jenis_kelamin, alamat, telepon, email) " +
+        String sql = "INSERT INTO karyawan (nik, nama, tempat_tanggal_lahir, jenis_kelamin, alamat, no_telepon, email) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, nik);
@@ -517,7 +507,6 @@ private void tampilDataKaryawan() {
     private javax.swing.JButton btnHapus;
     private javax.swing.JButton btnSimpan;
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
